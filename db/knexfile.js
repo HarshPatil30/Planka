@@ -30,10 +30,19 @@ function buildSSLConfig() {
 
 module.exports = {
   client: 'pg',
-  connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: buildSSLConfig(),
-  },
+  connection: process.env.DATABASE_URL 
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: buildSSLConfig(),
+      }
+    : {
+        host: process.env.DATABASE_HOST || 'localhost',
+        port: process.env.DATABASE_PORT || 5432,
+        user: process.env.DATABASE_USER || 'postgres',
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME || 'planka',
+        ssl: buildSSLConfig(),
+      },
   migrations: {
     tableName: 'migration',
     directory: path.join(__dirname, 'migrations'),

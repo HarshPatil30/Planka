@@ -45,5 +45,22 @@ fi
 
 export NODE_ENV=production
 
+# Debug: Check if DATABASE_URL is set (print only the protocol/host, not credentials)
+if [[ -z "${DATABASE_URL:-}" ]]; then
+  echo "ERROR: DATABASE_URL environment variable is not set!"
+  exit 1
+else
+  echo "DATABASE_URL is set (checking connection...)"
+fi
+
+if [[ -z "${SECRET_KEY:-}" ]]; then
+  echo "ERROR: SECRET_KEY environment variable is not set!"
+  exit 1
+fi
+
+if [[ -z "${BASE_URL:-}" ]]; then
+  echo "WARNING: BASE_URL environment variable is not set!"
+fi
+
 node db/init.js
 exec node app.js --prod

@@ -27,9 +27,9 @@ services:
       planka-db:
         condition: service_healthy
     environment:
-      BASE_URL: http://localhost:3000
-      DATABASE_URL: postgresql://planka:planka@planka-db:5432/planka
-      SECRET_KEY: notasecretkey1234567890abcdefghijklmnopqrstuvwxyz
+      BASE_URL: https://planka-1.onrender.com
+      DATABASE_URL: postgresql://neondb_owner:npg_r7JZXHo8VQcx@ep-green-surf-adgtxz2z-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      SECRET_KEY: MySuperSecretKey123456789
       TOKEN_EXPIRES_IN: 365
       PORT: 3000
       # Optional: Default admin user (created on first run)
