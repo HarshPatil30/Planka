@@ -18,6 +18,8 @@ module.exports.policies = {
 
   '*': 'is-authenticated',
 
+  'serve-spa': true, // Allow public access to serve the SPA
+
   'users/create': ['is-authenticated', 'is-admin'],
   'users/delete': ['is-authenticated', 'is-admin'],
 
