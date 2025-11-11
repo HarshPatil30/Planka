@@ -11,6 +11,7 @@
 
 const path = require('path');
 const serveStatic = require('serve-static');
+const fs = require('fs');
 
 module.exports.http = {
   /**
@@ -30,6 +31,7 @@ module.exports.http = {
      *
      */
     order: [
+      'serveSpaFallback',
       'cookieParser',
       'session',
       'bodyParser',
@@ -40,6 +42,31 @@ module.exports.http = {
       'www',
       'favicon',
     ],
+
+    /**
+     * Serve SPA HTML for browser requests (before authentication)
+     */
+    serveSpaFallback: (req, res, next) => {
+      // Skip API routes and static assets
+      if (req.path.startsWith('/api') || 
+          req.path.startsWith('/assets') || 
+          req.path.startsWith('/user-avatars') ||
+          req.path.startsWith('/background-images') ||
+          req.path.startsWith('/attachments') ||
+          req.path.match(/\.\w+$/)) {
+        return next();
+      }
+
+      // For browser requests to non-API routes, serve index.html
+      const sails = require('sails');
+      const indexPath = path.join(sails.config.appPath, 'public', 'index.html');
+      
+      if (fs.existsSync(indexPath)) {
+        return res.sendFile(indexPath);
+      }
+      
+      return next();
+    },
 
     /**
      * Custom middleware to serve static frontend assets from public directory
