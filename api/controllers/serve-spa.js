@@ -12,6 +12,7 @@ module.exports = {
 
   fn: async function (_, exits) {
     const indexPath = path.join(sails.config.appPath, 'public', 'index.html');
+    // Serve the index.html file for all SPA routes
     return exits.success(this.res.sendFile(indexPath));
   },
 };
