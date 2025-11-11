@@ -9,6 +9,9 @@
  * https://sailsjs.com/config/http
  */
 
+const path = require('path');
+const serveStatic = require('serve-static');
+
 module.exports.http = {
   /**
    *
@@ -26,16 +29,28 @@ module.exports.http = {
      * (This Sails app's routes are handled by the "router" middleware below.)
      *
      */
-    // order: [
-    //   'cookieParser',
-    //   'session',
-    //   'bodyParser',
-    //   'compress',
-    //   'poweredBy',
-    //   'router',
-    //   'www',
-    //   'favicon',
-    // ],
+    order: [
+      'cookieParser',
+      'session',
+      'bodyParser',
+      'compress',
+      'poweredBy',
+      'staticAssets',
+      'router',
+      'www',
+      'favicon',
+    ],
+
+    /**
+     * Custom middleware to serve static frontend assets from public directory
+     */
+    staticAssets: (function () {
+      const publicPath = path.join(__dirname, '..', 'public');
+      return serveStatic(publicPath, {
+        maxAge: process.env.NODE_ENV === 'production' ? 365.25 * 24 * 60 * 60 * 1000 : 0,
+      });
+    })(),
+
     /**
      *
      * The body parser that will handle incoming multipart HTTP requests.
