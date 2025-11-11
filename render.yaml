@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: planka
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node app.js --prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: PGSSLMODE
+        value: require
+      - key: TRUST_PROXY
+        value: true
+      - key: TOKEN_EXPIRES_IN
+        value: 365

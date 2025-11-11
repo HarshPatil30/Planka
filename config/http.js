@@ -44,11 +44,18 @@ module.exports.http = {
     /**
      * Custom middleware to serve static frontend assets from public directory
      */
-    staticAssets: (function () {
-      const publicPath = path.join(__dirname, '..', 'public');
-      return serveStatic(publicPath, {
-        maxAge: process.env.NODE_ENV === 'production' ? 365.25 * 24 * 60 * 60 * 1000 : 0,
-      });
+    staticAssets: (() => {
+      let staticMiddleware;
+      return (req, res, next) => {
+        if (!staticMiddleware) {
+          const sails = require('sails');
+          const publicPath = path.resolve(sails.config.appPath, 'public');
+          staticMiddleware = serveStatic(publicPath, {
+            maxAge: process.env.NODE_ENV === 'production' ? 365.25 * 24 * 60 * 60 * 1000 : 0,
+          });
+        }
+        return staticMiddleware(req, res, next);
+      };
     })(),
 
     /**
