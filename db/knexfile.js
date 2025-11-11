@@ -18,6 +18,13 @@ function buildSSLConfig() {
     };
   }
 
+  // Enable SSL for production environments (like Neon DB)
+  if (process.env.PGSSLMODE === 'require' || process.env.NODE_ENV === 'production') {
+    return {
+      rejectUnauthorized: false,
+    };
+  }
+
   return false;
 }
 

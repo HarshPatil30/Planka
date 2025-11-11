@@ -1,10 +1,8 @@
 services:
   - type: web
     name: planka
-    runtime: node
+    runtime: docker
     plan: free
-    buildCommand: npm install
-    startCommand: node app.js --prod
     envVars:
       - key: NODE_ENV
         value: production
@@ -17,6 +15,6 @@ services:
       - key: PGSSLMODE
         value: require
       - key: TRUST_PROXY
-        value: true
+        value: "1"
       - key: TOKEN_EXPIRES_IN
-        value: 365
+        value: "365"
