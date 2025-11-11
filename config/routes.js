@@ -227,8 +227,16 @@ module.exports.routes = {
     skipAssets: false,
   },
 
+  'GET /': {
+    view: 'index',
+    // don't skip assets for the explicit root route - ensure the UI is served
+    // at the bare URL even if asset detection differs in some environments.
+    skipAssets: false,
+  },
+
   'GET /*': {
     view: 'index',
     skipAssets: true,
   },
 };
+
