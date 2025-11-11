@@ -7,12 +7,24 @@ WORKDIR /app
 
 # Install minimal system deps (ca-certificates are commonly required)
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ca-certificates curl \
+  && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    python3 \
+    python3-pip \
+    build-essential \
+    make \
+    g++ \
   && rm -rf /var/lib/apt/lists/*
 
 # Copy package files and install production dependencies only
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+# Install production dependencies (node-gyp needs python & build tools)
+RUN npm ci --omit=dev --unsafe-perm
+
+# Optional: remove build tooling to keep image smaller
+RUN apt-get purge -y --auto-remove build-essential make g++ python3-pip \
+  && rm -rf /var/lib/apt/lists/*
 
 # Copy source
 COPY . .
