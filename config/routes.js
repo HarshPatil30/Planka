@@ -177,6 +177,16 @@ module.exports.routes = {
   'POST /api/notification-services/:id/test': 'notification-services/test',
   'DELETE /api/notification-services/:id': 'notification-services/delete',
 
+  'GET /assets/*': {
+    fn: staticDirServer('/assets', () =>
+      path.join(
+        path.resolve(sails.config.custom.uploadsBasePath),
+        'public/assets',
+      ),
+    ),
+    skipAssets: false,
+  },
+
   'GET /preloaded-favicons/*': {
     fn: staticDirServer('/preloaded-favicons', () =>
       path.join(
@@ -224,6 +234,62 @@ module.exports.routes = {
 
   'GET r|^/attachments/(\\w+)/download/thumbnails/([\\w-]+).(\\w+)$|id,fileName,fileExtension': {
     action: 'file-attachments/download-thumbnail',
+    skipAssets: false,
+  },
+
+  // Serve static files from public directory
+  'GET /favicon.ico': {
+    fn: (req, res) => {
+      const filePath = path.join(
+        path.resolve(sails.config.custom.uploadsBasePath),
+        'public/favicon.ico',
+      );
+      res.sendFile(filePath);
+    },
+    skipAssets: false,
+  },
+
+  'GET /manifest.json': {
+    fn: (req, res) => {
+      const filePath = path.join(
+        path.resolve(sails.config.custom.uploadsBasePath),
+        'public/manifest.json',
+      );
+      res.sendFile(filePath);
+    },
+    skipAssets: false,
+  },
+
+  'GET /robots.txt': {
+    fn: (req, res) => {
+      const filePath = path.join(
+        path.resolve(sails.config.custom.uploadsBasePath),
+        'public/robots.txt',
+      );
+      res.sendFile(filePath);
+    },
+    skipAssets: false,
+  },
+
+  'GET /logo192.png': {
+    fn: (req, res) => {
+      const filePath = path.join(
+        path.resolve(sails.config.custom.uploadsBasePath),
+        'public/logo192.png',
+      );
+      res.sendFile(filePath);
+    },
+    skipAssets: false,
+  },
+
+  'GET /logo512.png': {
+    fn: (req, res) => {
+      const filePath = path.join(
+        path.resolve(sails.config.custom.uploadsBasePath),
+        'public/logo512.png',
+      );
+      res.sendFile(filePath);
+    },
     skipAssets: false,
   },
 
