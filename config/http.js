@@ -47,13 +47,20 @@ module.exports.http = {
      * Serve SPA HTML for browser requests (before authentication)
      */
     serveSpaFallback: (req, res, next) => {
-      // Skip API routes and static assets
-      if (req.path.startsWith('/api') || 
-          req.path.startsWith('/assets') || 
-          req.path.startsWith('/user-avatars') ||
-          req.path.startsWith('/background-images') ||
-          req.path.startsWith('/attachments') ||
-          req.path.match(/\.\w+$/)) {
+      // Skip API routes, static assets, and files with extensions
+      if (req.path.startsWith('/api/') || 
+          req.path.startsWith('/assets/') || 
+          req.path.startsWith('/user-avatars/') ||
+          req.path.startsWith('/background-images/') ||
+          req.path.startsWith('/attachments/') ||
+          req.path.startsWith('/favicons/') ||
+          req.path.startsWith('/preloaded-favicons/') ||
+          req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|map)$/i)) {
+        return next();
+      }
+
+      // Only serve SPA for GET requests from browsers (not API calls)
+      if (req.method !== 'GET') {
         return next();
       }
 
@@ -61,8 +68,14 @@ module.exports.http = {
       const sails = require('sails');
       const indexPath = path.join(sails.config.appPath, 'public', 'index.html');
       
-      if (fs.existsSync(indexPath)) {
-        return res.sendFile(indexPath);
+      try {
+        if (fs.existsSync(indexPath)) {
+          const html = fs.readFileSync(indexPath, 'utf8');
+          res.set('Content-Type', 'text/html');
+          return res.send(html);
+        }
+      } catch (err) {
+        console.error('Error serving SPA:', err);
       }
       
       return next();
