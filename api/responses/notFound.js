@@ -32,10 +32,19 @@
  */
 
 module.exports = function notFound(message) {
-  const { res } = this;
+  const { req, res } = this;
 
-  return res.status(404).json({
-    code: 'E_NOT_FOUND',
-    message,
-  });
+  // If this is an API request or explicitly wants JSON, return JSON
+  // Otherwise, serve the index view for browser requests (SPA fallback)
+  const wantsJSON = req.wantsJSON || req.path.startsWith('/api');
+  
+  if (wantsJSON) {
+    return res.status(404).json({
+      code: 'E_NOT_FOUND',
+      message,
+    });
+  }
+
+  // For all other requests (browser navigation), serve the SPA
+  return res.view('index');
 };

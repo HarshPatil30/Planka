@@ -20,7 +20,16 @@ const envToNumber = (value) => {
 
 const envToArray = (value) => (value ? value.split(',') : []);
 
-const parsedBasedUrl = new URL(process.env.BASE_URL);
+// Parse BASE_URL with fallback for development
+const baseUrlString = process.env.BASE_URL || 'http://localhost:3000';
+let parsedBasedUrl;
+try {
+  parsedBasedUrl = new URL(baseUrlString);
+} catch (error) {
+  console.error('Invalid BASE_URL:', baseUrlString);
+  console.error('Using fallback: http://localhost:3000');
+  parsedBasedUrl = new URL('http://localhost:3000');
+}
 
 module.exports.custom = {
   /**

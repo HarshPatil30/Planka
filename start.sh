@@ -51,6 +51,13 @@ if [[ -z "${DATABASE_URL:-}" ]]; then
   exit 1
 else
   echo "DATABASE_URL is set (checking connection...)"
+  # Extract hostname from DATABASE_URL for debugging (without credentials)
+  DB_HOST=$(echo "$DATABASE_URL" | sed -n 's/.*@\([^:\/]*\).*/\1/p')
+  echo "Database hostname: $DB_HOST"
+  if [[ -n "$DB_HOST" ]]; then
+    echo "Testing DNS resolution for: $DB_HOST"
+    nslookup "$DB_HOST" || echo "WARNING: DNS lookup failed for $DB_HOST"
+  fi
 fi
 
 if [[ -z "${SECRET_KEY:-}" ]]; then

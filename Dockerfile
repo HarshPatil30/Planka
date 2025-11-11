@@ -16,6 +16,7 @@ RUN apt-get update \
     make \
     g++ \
     bash \
+    dnsutils \
   && rm -rf /var/lib/apt/lists/*
 
 # Copy package files and install production dependencies only

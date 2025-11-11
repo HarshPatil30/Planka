@@ -23,7 +23,16 @@ const { URL } = require('url');
 
 const { customLogger } = require('../../utils/logger');
 
-const parsedBasedUrl = new URL(process.env.BASE_URL);
+// Parse BASE_URL with error handling
+const baseUrlString = process.env.BASE_URL || 'http://localhost:3000';
+let parsedBasedUrl;
+try {
+  parsedBasedUrl = new URL(baseUrlString);
+} catch (error) {
+  console.error('Invalid BASE_URL in production:', baseUrlString);
+  console.error('Using fallback: http://localhost:3000');
+  parsedBasedUrl = new URL('http://localhost:3000');
+}
 
 module.exports = {
   /**

@@ -12,6 +12,18 @@ console.log('Database client:', knexfile.client);
 console.log('Has DATABASE_URL:', !!process.env.DATABASE_URL);
 console.log('PGSSLMODE:', process.env.PGSSLMODE);
 
+// Extract and log hostname for debugging (without credentials)
+if (process.env.DATABASE_URL) {
+  try {
+    const url = new URL(process.env.DATABASE_URL);
+    console.log('Database hostname:', url.hostname);
+    console.log('Database port:', url.port || '5432');
+    console.log('Database name:', url.pathname.substring(1));
+  } catch (err) {
+    console.error('Failed to parse DATABASE_URL:', err.message);
+  }
+}
+
 const knex = initKnex(knexfile);
 
 (async () => {
