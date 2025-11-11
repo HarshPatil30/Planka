@@ -68,11 +68,26 @@ module.exports.http = {
       const sails = require('sails');
       const indexPath = path.join(sails.config.appPath, 'public', 'index.html');
       
+      console.log('SPA Fallback - Request path:', req.path);
+      console.log('SPA Fallback - Looking for index at:', indexPath);
+      console.log('SPA Fallback - File exists:', fs.existsSync(indexPath));
+      console.log('SPA Fallback - App path:', sails.config.appPath);
+      
       try {
         if (fs.existsSync(indexPath)) {
           const html = fs.readFileSync(indexPath, 'utf8');
+          console.log('SPA Fallback - HTML content length:', html.length);
           res.set('Content-Type', 'text/html');
           return res.send(html);
+        } else {
+          console.error('SPA Fallback - index.html NOT FOUND at:', indexPath);
+          // Try listing the public directory
+          const publicDir = path.join(sails.config.appPath, 'public');
+          if (fs.existsSync(publicDir)) {
+            console.log('Public directory contents:', fs.readdirSync(publicDir));
+          } else {
+            console.error('Public directory does not exist at:', publicDir);
+          }
         }
       } catch (err) {
         console.error('Error serving SPA:', err);
