@@ -15,6 +15,7 @@ RUN apt-get update \
     build-essential \
     make \
     g++ \
+    bash \
   && rm -rf /var/lib/apt/lists/*
 
 # Copy package files and install production dependencies only
@@ -36,4 +37,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s CMD curl -f http://localhost:3000/ || exit 1
 
 # Start the app. The app will read PORT from environment if provided by the host.
-CMD ["node", "app.js", "--prod"]
+CMD ["bash", "/app/start.sh"]
